@@ -1,16 +1,29 @@
 import Particle from "@src/Particle"
 
-const MAX_PARTICLES = 200
+const MAX_PARTICLES = 300
+
+enum AnimationType {
+    SHOWER = 'shower',
+}
 
 let particles: Particle[] = []
 let canvas: HTMLCanvasElement | null
+let animationType = AnimationType.SHOWER
+
+const resizeCanvas = () => {
+    if (!canvas) return
+
+    canvas.width = window.innerWidth
+    canvas.height = window.innerHeight
+}
 
 const createCanvas = () => {
     canvas = document.createElement('canvas')
-    canvas.width = window.innerHeight
-    canvas.height = window.innerHeight
+    resizeCanvas()
 
     document.body.appendChild(canvas)
+
+    window.addEventListener('resize', resizeCanvas, false)
 }
 
 const update = () => {
@@ -30,8 +43,10 @@ const update = () => {
     particles = particles.filter((particle: Particle) => particle.active)
 }
 
-const fire = () => {
+const fire = (type: AnimationType) => {
     const context = canvas?.getContext('2d')
+
+    animationType = type
 
     if (!context || !canvas) return
 
